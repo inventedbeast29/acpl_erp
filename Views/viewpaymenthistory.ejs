@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment History</title>
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Font Awesome for Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .table th, .table td {
+      vertical-align: middle;
+    }
+    .badge-date {
+      font-size: 0.85rem;
+      background-color: #0d6efd;
+    }
+    .history-card {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <a class="btn btn-primary" href="/payment">Back To Payment</a>
+    <div class="history-card p-4 bg-white">
+      <h2 class="mb-4"><i class="fas fa-history me-2"></i>Payment History</h2>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+          <thead class="table-dark text-center">
+            <tr>
+              <th scope="col">Sales Invoice No</th>
+              <th scope="col">Customer Name</th>
+              <th scope="col">Invoice Amount (₹)</th>
+              <th scope="col">Payment ID</th>
+              <th scope="col">Payment Received Method</th>
+              <th scope="col">Transaction No</th>
+              <th scope="col">Cheque No</th>
+              <th scope="col">Amount Paid (₹)</th>
+              <th scope="col">Payment Received Date</th>
+              <th scope="col">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% result.forEach(function(e) { %>
+              <% const date = e.payment_date.toLocaleString('en-GB'); %>
+              <% const receivedate = date.split(","); %>
+              <tr class="text-center bg-light">
+                <td><i class="fas fa-file-invoice-dollar me-1 text-primary"></i><%= e.sales_invoice %></td>
+                <td><%= e.cust_name %></td>
+                <td>₹ <%= e.invoice_amt %></td>
+                <td><%=e.payment_id %></td>
+                <td><%= e.method %></td>
+                <td><%= e.transaction_no %></td>
+                <td><%= e.cheque_no %></td>
+                <td class="text-success fw-semibold">₹ <%= e.amt_paid %></td>
+                <td><span class="badge badge-date text-white px-3 py-2"><%= receivedate[0] %></span></td>
+                <td><%=e.notes%></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  ></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Employee</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons (Optional but recommended) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2 class="mb-4 text-center">Update Password</h2>
+
+    <% users.forEach(function(user) { %>
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <form action="/updateuser/<%= user.id %>" method="POST">
+            <div class="mb-3">
+              <label for="name-<%= user.id %>" class="form-label"><i class="bi bi-person-fill"></i> Name</label>
+              <input type="text" id="name-<%= user.id %>" name="name" class="form-control" value="<%= user.name %>" disabled>
+            </div>
+
+            <div class="mb-3">
+              <label for="email-<%= user.id %>" class="form-label"><i class="bi bi-envelope-fill"></i>  Email</label>
+              <input type="email" id="email-<%= user.id %>" name="email" class="form-control" placeholder="Email" required value="<%= user.email %>" disabled>
+            </div>
+
+            <div class="mb-3">
+              <label for="password-<%= user.id %>" class="form-label"><i class="bi bi-lock-fill"></i> Update Password</label>
+              <input type="password" id="password" name="password" class="form-control" placeholder="Enter New Password" required>
+            </div>
+                 <div class="row mb-3">
+            <div class="col-md-6">
+          <a href="/employee" class="btn btn-secondary w-100">Cancel</a>
+            </div>
+            
+              <div class="col-md-6">
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-arrow-repeat"></i> Update
+              </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+    </form>
+  </div>
+</body>
+</html>
