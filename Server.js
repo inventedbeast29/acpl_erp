@@ -14,7 +14,8 @@ app.use(cookieparser());
 const authenticateRoutes=require("./authenticateRoutes")
 const methodoverride=require('method-override');
 const { default: Swal } = require('sweetalert2');
-const roleCheck=require("./RBAC")
+const roleCheck=require("./RBAC");
+const { queryObjects } = require('v8');
 
 
 
@@ -873,7 +874,17 @@ app.post("/delete_department/:id",(req,res)=>{
         //````````````Reminders`````````````````````````````````
 
 app.get("/reminders",(req,res)=>{
-  const query="Select * from customers";
+  
+  const query="select * from reminder"
+  db.query(query,(err,data)=>{
+    if(err){console.log(err)}
+      res.render("reminder_dashboard",{data})
+    })          
+    }) 
+ 
+
+    app.get("/send_reminder",(req,res)=>{
+        const query="Select * from customers";
   const query2="Select * from quotation";
   db.query(query,(err,result)=>{
     if(err){
@@ -881,17 +892,19 @@ app.get("/reminders",(req,res)=>{
     }
     db.query(query2,(err,quotation)=>{
       if(err){console.log(err);
-        return res.send("Cannot get quotation")
-      }
+        return res.send("Cannot get quotation")}
       res.render("reminder",{result,quotation})
-    })  
+    })
   })
 })
-
-
+ 
 
   app.post("/send_reminder",(req,res)=>{
     const{customerName,customerEmail,quotationNo,reminderType,message}=req.body
+    const query="Insert into reminder (cust_name,cust_mail,reminder_type,sent_date) values (?,?,?,Now())"
+    db.query(query,[customerName,customerEmail,reminderType],(err,result)=>{
+          if(err){console.log(err)}
+    
     console.log(customerName,customerEmail,quotationNo,reminderType,message);
     let subject="";
     if(reminderType==="quotation"){
@@ -922,6 +935,7 @@ app.get("/reminders",(req,res)=>{
           res.json({"status":"mailsent"})
   })
 })
+  })
 
   
 
