@@ -29,25 +29,33 @@
         <form action="/add-customer" method="POST">
           <div class="row">
             <!-- Customer Name -->
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
               <label for="name" class="form-label">Customer Name</label>
               <input type="text" class="form-control" id="name" name="name" required>
             </div>
 
+            <div class="col-md-4">
+              <label for="contactperson" class="form-label">Contact Person Name</label>
+              <input type="text" class="form-control" name="contactperson" placeholder="Contact Person Details and Designation">
+            </div>
             <!-- Phone -->
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
               <label for="phone" class="form-label" >Phone Number</label>
               <input type="tel" pattern="[0-9]{10}" class="form-control" id="phone" name="phone" placeholder="10 digit number" required>
             </div>
 
             <!-- Email -->
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
               <label for="email" class="form-label">Email Address</label>
               <input type="email" class="form-control" id="email" name="email" required>
             </div>
 
+            <div class="col-md-3">
+            <label for="agentregion" class="form-label">Indian Agent's Region</label>
+            <input type="text" name="agentregion" class="form-control">
+            </div>
             <!-- Address -->
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
               <label for="address" class="form-label">Address</label>
               <textarea class="form-control" id="address" name="address" rows="2" required></textarea>
             </div>
@@ -64,8 +72,29 @@
               <input type="text" class="form-control" id="aadhar" name="aadhar" pattern="[0-9]{12}">
             </div>
           </div>
-
-
+<hr>
+            <div class="row">
+              <h3>Manufacturer Details</h3>
+            <div class="col-md-4">
+              <label for="manufacturer" class="form-label">Name of Manufacturer</label>
+              <input type="text" class="form-control" name="manufacturer">
+            </div>
+            <div class="col-md-4">
+              <label for="manu_person_name" class="form-label">Name of Concerned Person</label>
+              <input type="text" class="form-control" name="manu_person_name">
+              </div>
+              <div class="col-md-4">
+                <label for="mancontact" class="form-label">Contact No. of Concerned Person</label>
+                <input type="tel" pattern="[0-9]{10}" class="form-control" name="mancontact" placeholder="Enter 10 digit phone number">
+                </div>
+              </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+              <label for="mancountry" class="form-label">Country</label>
+              <input type="text" class="form-control" name="mancountry" placeholder="Enter country name">
+            </div>
+            </div>
+<hr>
           <div class="col-md-6 mb-3">
   <label for="assignedTo" class="form-label" required>Assigned To</label>
   <select class="form-select" id="assignedTo" name="assigned" required>

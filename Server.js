@@ -321,9 +321,9 @@ app.get("/customer_dashboard",(req,res)=>{
 
 app.post("/add-customer",(req,res)=>{
   const userInfo=req.user.email
-  const {name,phone,email,address,pan,aadhar,assigned}=req.body
-  const query="Insert into customers(name,phone,email,address,pan,aadhar,assigned,created_by,updated_by,last_updated) values(?,?,?,?,?,?,?,?,?,Now())";
-  db.query(query,[name,phone,email,address,pan,aadhar,assigned,userInfo,userInfo],(err,result)=>{
+  const {name,phone,email,address,pan,aadhar,assigned,agentregion,manufacturer,manu_person_name,mancontact,mancountry,contactperson}=req.body
+  const query="Insert into customers(name,phone,email,address,pan,aadhar,assigned,created_by,updated_by,last_updated,contact_person,agent_region,manufacturer_name,manuf_person_name,manuf_contact,manuf_country) values(?,?,?,?,?,?,?,?,?,Now(),?,?,?,?,?,?)";
+  db.query(query,[name,phone,email,address,pan,aadhar,assigned,userInfo,userInfo,contactperson,agentregion,manufacturer,manu_person_name,mancontact,mancountry],(err,result)=>{
       if(err){
         console.log("Cannot Insert data into Customers",err)
       }
