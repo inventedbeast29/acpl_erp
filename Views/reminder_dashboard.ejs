@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Reminder Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body class="bg-light">
     <div class="btn d-flex justify-content-between">
@@ -18,13 +19,12 @@
         Reminder Type Summary
       </div>
       <div class="card-body p-0">
-        <table class="table table-bordered table-hover mb-0">
+        <table class="table table-bordered table-hover mb-0 text-center">
           <thead class="table-light">
             <tr>
               <th scope="col">S.No</th>
               <th scope="col">Customer Name</th>
-              <th scope="col">Reminder Type</th>
-              <th scope="col">Total Sent</th>
+              <th scope="col">Customer Mail</th>
               <th scope="col">View Reminder History</th>
             </tr>
           </thead>
@@ -38,9 +38,9 @@
                 <tr>
                   <th><%= index + 1 %></th>
                   <th><%=row.cust_name %></th>
-                  <td><%= row.reminder_type %></td>
-                     <td>kkk</td>             
-                  <td></td>
+                  <td><%=row.cust_mail %></td>        
+                  <td>  <form action="/view_reminder_history/<%=row.cust_name%>" method="get"> <button type="submit" class="btn btn-primary" title="View History">
+      <i class="bi bi-eye"></i> View History</form></td>
                 </tr>
               <% }) %>
             <%} %>

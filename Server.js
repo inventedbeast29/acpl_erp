@@ -875,13 +875,30 @@ app.post("/delete_department/:id",(req,res)=>{
 
 app.get("/reminders",(req,res)=>{
   
-  const query="select * from reminder"
+  const query="select distinct cust_name,cust_mail from reminder"
   db.query(query,(err,data)=>{
     if(err){console.log(err)}
       res.render("reminder_dashboard",{data})
     })          
     }) 
  
+    app.get("/view_reminder_history/:name",(req,res)=>{
+      const {name}=req.params
+      const query="Select * from reminder where cust_name=?"
+      const query2="SELECT COUNT(sent_date) AS total_reminders FROM reminder WHERE cust_name = ?"
+      db.query(query,[name],(err,result)=>{
+        if(err){console.log(err)}
+      //  console.log(result)
+      db.query(query2,[name],(err,count)=>{
+        if(err){console.log(err)}
+        let totalcount=count[0]
+        //console.log(totalcount)
+        res.render("viewreminder_history",{result,totalcount})
+      })
+        
+      })
+      
+    })
 
     app.get("/send_reminder",(req,res)=>{
         const query="Select * from customers";
@@ -901,8 +918,8 @@ app.get("/reminders",(req,res)=>{
 
   app.post("/send_reminder",(req,res)=>{
     const{customerName,customerEmail,quotationNo,reminderType,message}=req.body
-    const query="Insert into reminder (cust_name,cust_mail,reminder_type,sent_date) values (?,?,?,Now())"
-    db.query(query,[customerName,customerEmail,reminderType],(err,result)=>{
+    const query="Insert into reminder (cust_name,cust_mail,reminder_type,sent_date,message) values (?,?,?,Now(),?)"
+    db.query(query,[customerName,customerEmail,reminderType,message],(err,result)=>{
           if(err){console.log(err)}
     
     console.log(customerName,customerEmail,quotationNo,reminderType,message);

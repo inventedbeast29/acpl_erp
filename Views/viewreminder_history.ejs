@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reminder History Sent</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    
+  <div class="container mt-5">
+    <a href="/reminders" class="btn btn-primary">Back to dashboard</a>
+    <h2 class="mb-4 text-center">Reminder Sent History</h2>
+
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>S.No</th>
+          <th>Recipient</th>
+          <th>Reminder Type</th>
+          <th>Message</th>
+          <th>Date Sent</th>
+        </tr>
+      </thead>
+      <tbody>
+       <% result.forEach(function(rem,index) { %>
+        <tr>
+        <% let date=new Date(rem.sent_date) %>
+        <% let sentOn=date.toLocaleString('en-GB').split(",") %>
+        <td><%= index+1%></td>
+        <td><%= rem.cust_name %></td>
+        <td><%= rem.reminder_type %></td>
+        <td><%= rem.message %></td>
+        <td><%= sentOn[0] %></td>
+     <%  }) %>
+            </tr>
+      </tbody>
+    </table>
+    <span class="total" style="position: absolute;right: 10vw; border: 0.2px solid rgba(0, 0, 0, 0.212);">
+         <p style="padding: 10px;">Total Reminder Sent =<b><%= totalcount.total_reminders %></b></p>      
+    </span>
+  </div>
+</body>
+</html>
