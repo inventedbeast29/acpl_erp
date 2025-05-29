@@ -84,8 +84,22 @@
                 <label for="gst" id="gst" class="form-label">GSTIN (If Applicable)</label>
                 <input type="text" id="gst" name="gst" class="form-control">
               </div>
-
             </div>
+
+
+              <hr>
+              <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="govtfee" class="form-label" >Goverment Fees</label>
+              <input type="number" class="form-control" name="govtfee" id="govtfee" required> 
+            </div>
+            <div class="col-md-6">
+              <label for="constfee" class="form-label" >Consultation Fees</label>
+              <input type="number" class="form-control" name="constfee" id="constfee" required> 
+          </div>
+          </div>
+          
+
 
             <h2 class="mt-4">Item Details</h2>
             <hr>
@@ -135,17 +149,7 @@
           </div>
           <hr>
 
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="govtfee" class="form-label" >Goverment Fees</label>
-              <input type="number" class="form-control" name="govtfee" id="govtfee" required> 
-            </div>
-            <div class="col-md-6">
-              <label for="constfee" class="form-label" >Consultation Fees</label>
-              <input type="number" class="form-control" name="constfee" id="constfee" required> 
-          </div>
-          </div>
-        <hr>
+        
           <div class="row mb-3">          
               <p style="font-weight: bolder;font-size:25px">Grand Total</p>
              
@@ -167,7 +171,7 @@
                 <input type="number" class="form-control" name="grandTotal" id="grandTotal" readonly>
             </div>
           </div>
-          <hr>
+          
             <!-- Payment Terms and Conditions Row -->
             <div class="row mb-3">
                 <div class="col-md-6">

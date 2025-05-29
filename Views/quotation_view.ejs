@@ -41,18 +41,21 @@
             <!-- Back to Dashboard Button -->
             <h1 class="text-center">Quotation</h1>
         </div>
-        
+        <% let sdate=new Date(qresult.sent_date).toLocaleDateString('en-GB').split(",") %>
         <!-- Quotation Details Form -->
-        <form>
-            
+              <form>          
             <!-- Customer Details Row -->
             <div class="row mb-3">
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="customerName" class="form-label">Customer Name</label>
                <input type="text" class="form-control" disabled value="<%=qresult.cust_name %>">
               </div>
 
-              <div class="col-md-6">
+              <div class="col-md-4">
+                <label for="sent_date" class="form-label">Quotation Sent On</label>
+                <input type="text" class="form-control" value="<%= sdate %>" disabled>
+              </div>
+              <div class="col-md-4">
                 <label for="quotation_sts" class="form-label">Quotation Status</label>
                <input type="text" class="form-control" disabled value="<%= qresult.quotation_sts %>">
             </div>
@@ -89,8 +92,8 @@
             </tr>
         </thead>
        <tbody>
-         <% if (result && result.length > 0) { %>
-      <% result.forEach(function(item,index){ %>
+         <% if (q2result && q2result.length > 0) { %>
+      <% q2result.forEach(function(item,index){ %>
         <tr>
           <td><%=index+1 %> </td>
           <td><%=item.item_desc %></td>
@@ -145,18 +148,18 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="paymentTerms" class="form-label">Payment Terms</label>
-                    <textarea id="paymentTerms" name="paymentTerms" class="form-control" disabled><%=q2ans.payment_term  %></textarea>
+                    <textarea id="paymentTerms" name="paymentTerms" class="form-control" disabled><%=q2result[0].payment_term  %></textarea>
                 </div>
                 <div class="col-md-6">
                     <label for="termsConditions" class="form-label">Terms & Conditions</label>
-                    <textarea id="termsConditions" name="termsConditions" class="form-control" disabled><%=q2ans.term_condition  %></textarea>
+                    <textarea id="termsConditions" name="termsConditions" class="form-control" disabled><%=q2result[0].term_condition  %></textarea>
                 </div>
             </div>
 
             <!-- Remarks Row -->
             <div class="mb-3">
                 <label for="remarks" class="form-label">Remarks/Notes</label>
-                <textarea id="remarks" name="remarks" class="form-control" disabled><%=q2ans.notes %></textarea>
+                <textarea id="remarks" name="remarks" class="form-control" disabled><%=q2result[0].notes %></textarea>
             </div>
               
       

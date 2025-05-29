@@ -571,12 +571,12 @@ app.post("/submit_quotation",(req,res)=>{
   const {customerName,gst,quotation_sts,quotationNo,totalTax,totalDiscamt,totalQty,grandTotal,paymentTerms,termsConditions,govtfee,constfee,remarks}=req.body
  
  //console.log(customerName,quotationDate,quotationNo,totalQty,grandTotal,"Paymentterm",paymentTerms,"termsConditions",termsConditions,"remark",remarks);
-    const query="Insert into quotation (cust_name,gst,qtn_date,quotation_no,total_qty,totalTax,total_disc,total_amt,quotation_sts,updated_by,govtfee,const_fee)values(?,?,Now(),?,?,?,?,?,?,?,?,?) "
+    const query="Insert into quotation (cust_name,gst,qtn_date,quotation_no,total_qty,totalTax,total_disc,total_amt,quotation_sts,govtfee,const_fee,created_by)values(?,?,Now(),?,?,?,?,?,?,?,?,?) "
     const query2 = "INSERT INTO quotation_items (quotation_no, item_desc, quantity, unit_price, discount_amt, tax_amt, total_amt,payment_term,term_condition,notes) VALUES (?, ?, ?, ?, ?, ?,?,?,?, ?)";
    const   {item_desc,quantity,unitPrice,discount,tax,amount}=req.body
   // console.log(item_desc,quantity,unitPrice,discount,tax,amount)
     
-    db.query(query,[customerName,gst,quotationNo,totalQty,totalTax,totalDiscamt,grandTotal,quotation_sts,userInfo,govtfee,constfee],(err,result)=>{
+    db.query(query,[customerName,gst,quotationNo,totalQty,totalTax,totalDiscamt,grandTotal,quotation_sts,govtfee,constfee,userInfo],(err,result)=>{
       if(err){
         console.log("error inserting quotation details",err)
       }
@@ -612,10 +612,11 @@ app.post("/submit_quotation",(req,res)=>{
 
 app.get("/quotation_dashboard",(req,res)=>{
 // const query="select * from quotation";
-    const query2="SELECT quotation.id, quotation.quotation_no, quotation.cust_name,quotation.total_qty,quotation.total_amt,quotation.qtn_date,quotation.quotation_sts,quotation.acc_rej_date,quotation.last_updated,quotation.updated_by,sales_invoice.invoice_no FROM quotation LEFT JOIN sales_invoice ON quotation.quotation_no = sales_invoice.quotation_no";
+    const query2="SELECT quotation.id, quotation.quotation_no, quotation.cust_name,quotation.total_qty,quotation.total_amt,quotation.qtn_date,quotation.quotation_sts,quotation.acc_rej_date,quotation.last_updated,quotation.updated_by,quotation.created_by,quotation.sent_date,sales_invoice.invoice_no FROM quotation LEFT JOIN sales_invoice ON quotation.quotation_no = sales_invoice.quotation_no";
     db.query(query2,(err,result)=>{
       if(err){console.log(err)}
       console.log(result)
+
       res.render("quotation_dashboard",{result});
     })
     })
@@ -627,55 +628,45 @@ app.get("/view-quotation/:id",(req,res)=>{
   const qNo=req.query.qno
   const query="Select * from quotation where id=?"
  const query2="select * from quotation_items where quotation_no=?"
- const query3="select * from quotation_items where quotation_no=?"
   db.query(query,[id],(err,result)=>{
     if(err){console.log(err); return res.send("Cannot view quotation")}
     const qresult=result[0];
-    console.log(result);
+   // console.log(result);
    
     db.query(query2,[qNo],(err,q2result)=>{
       if(err){return res.send("error",err)}
-      const q2ans=q2result[0];
-      console.log(q2ans)
-      db.query(query3,[qNo],(err,result)=>{
-        if(err){return res.send("Error",err)}
-        console.log("ITEMS",result)
-        res.render("quotation_view",{qresult,q2ans,result})
+  
+        res.render("quotation_view",{qresult,q2result})
       })
   })
 })
-})
+
 app.get("/edit-quotation/:id",(req,res)=>{
   const id=req.params.id;
   const qNo2=req.query.qno
   const query="Select * from quotation where id=?"
  const query2="select * from quotation_items where quotation_no=?"
- const query3="select * from quotation_items where quotation_no=?"
+
   db.query(query,[id],(err,result)=>{
     if(err){return res.send("Cannot view quotation",err)}
     const qresult=result[0];
-    //console.log(qresult);
+   // console.log("Edit query",qresult);
    
-    db.query(query2,[qNo2],(err,q2result)=>{
+    db.query(query2,[qNo2],(err,q2ans)=>{
       if(err){return res.send("error",err)}
-      const q2ans=q2result[0];
-      db.query(query3,[qNo2],(err,result)=>{
-        if(err){return res.send("Error",err)}
-        console.log(q2ans)
-       
-          res.render("edit_quotation",{qresult,q2ans,result})
+      
+          res.render("edit_quotation",{q2ans,qresult})
         })
 })
-    })
   })
 
   app.post("/edit_quotation",(req,res)=>{
-    const {quotation_sts,acc_rej_date,paymentTerms,termsConditions,remarks}=req.body
+    const {quotation_sts,acc_rej_date,paymentTerms,termsConditions,remarks,qtnsent_date}=req.body
     
     const qNo=req.query.qno
-    const query="Update quotation set quotation_sts=?,acc_rej_date=?,last_updated=Now() where quotation_no=?"
+    const query="Update quotation set quotation_sts=?,acc_rej_date=?,last_updated=Now(),sent_date=? where quotation_no=?"
     const query2="Update quotation_items set payment_term=?,term_condition=?,notes=? where quotation_no=?"
-    db.query(query,[quotation_sts,acc_rej_date,qNo],(err,result)=>{
+    db.query(query,[quotation_sts,acc_rej_date,qtnsent_date,qNo],(err,result)=>{
       if(err){
         console.log(err);
          return res.send("Error Updating Quotation")}

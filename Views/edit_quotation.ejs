@@ -49,25 +49,42 @@
         <!-- Quotation Details Form -->
         <form action="/edit_quotation?qno=<%= qresult.quotation_no %>" method="post">
             
+        <form>
+        
+         <%   let sdate = '';
+  if (qresult.sent_date) {
+    const rawDate = new Date(qresult.sent_date);
+    if (!isNaN(rawDate)) {
+      const yyyy = rawDate.getFullYear();
+      const mm = String(rawDate.getMonth() + 1).padStart(2, '0');
+      const dd = String(rawDate.getDate()).padStart(2, '0');
+      sdate = `${yyyy}-${mm}-${dd}`;  // Format required by input type="date"
+    }
+  } %>
+
             <!-- Customer Details Row -->
             <div class="row mb-3">
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <label for="customerName" class="form-label">Customer Name</label>
                <input type="text" class="form-control" disabled value="<%=qresult.cust_name %>">
               </div>
+              <div class="col-md-3">
+                <label for="qtnsent_date" class="form-label">Quotation Sent Date</label>
+                <input type="date" class="form-control"  name="qtnsent_date" value="<%=sdate?sdate:'' %>"  <%= sdate?'readonly':'' %>>
+              </div>
 
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <label for="quotation_sts" class="form-label">Quotation Status</label>
-               <select id="quotation_sts" name="quotation_sts" class="form-select " required>
-                <option value="Pending">Pending</option>
+               <select id="quotation_sts" name="quotation_sts" class="form-select" required >
+                  <option value="Pending">Pending</option>
                   <option value="Accepted">Accepted</option>
                   <option value="Rejected">Rejected</option>
                </select>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="acc_rej_date" class="form-label">Accepted/Rejected Date</label>
-                <input type="date" name="acc_rej_date" class="form-control"required>
+                <input type="date" name="acc_rej_date" class="form-control">
             </div>
             </div>
 
@@ -102,8 +119,8 @@
             </tr>
         </thead>
        <tbody>
-         <% if (result && result.length > 0) { %>
-      <% result.forEach(function(item,index){ %>
+         <% if (q2ans && q2ans.length > 0) { %>
+      <% q2ans.forEach(function(item,index){ %>
         <tr>
           <td><%=index+1 %> </td>
           <td><%=item.item_desc %></td>
@@ -158,18 +175,18 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="paymentTerms" class="form-label">Payment Terms</label>
-                    <textarea id="paymentTerms" name="paymentTerms" style="background-color: rgba(18, 19, 19, 0.071);" class="form-control" readonly><%=q2ans.payment_term %></textarea>
+                    <textarea id="paymentTerms" name="paymentTerms" style="background-color: rgba(18, 19, 19, 0.071);" class="form-control" readonly><%=q2ans[0].payment_term %></textarea>
                 </div>
                 <div class="col-md-6">
                     <label for="termsConditions" class="form-label">Terms & Conditions</label>
-                    <textarea id="termsConditions" style="background-color: rgba(18, 19, 19, 0.071);" name="termsConditions" class="form-control" readonly><%=q2ans.term_condition%></textarea>
+                    <textarea id="termsConditions" style="background-color: rgba(18, 19, 19, 0.071);" name="termsConditions" class="form-control" readonly><%=q2ans[0].term_condition%></textarea>
                 </div>
             </div>
 
             <!-- Remarks Row -->
             <div class="mb-3">
                 <label for="remarks" class="form-label">Remarks/Notes</label>
-                <textarea id="remarks" name="remarks" class="form-control" style="background-color: rgba(18, 19, 19, 0.071);" readonly><%=q2ans.notes %></textarea>
+                <textarea id="remarks" name="remarks" class="form-control" style="background-color: rgba(18, 19, 19, 0.071);" readonly><%=q2ans[0].notes %></textarea>
             </div>
               <div class="mb-3">
            <button type="submit" class="btn btn-primary submit">Update</button>
