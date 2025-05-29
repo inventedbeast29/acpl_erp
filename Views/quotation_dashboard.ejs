@@ -130,7 +130,7 @@
                                 <%=created_on%>
                             </td>
                             <td><%= quotation.created_by %> </td>
-                            <td><%=date[0]?date[0]:"" %></td>
+                            <td><%=date[0]?date[0]:" " %></td>
                             <td>
                                 <% if (quotation.quotation_sts==='Accepted' ) { %>
                                     <span class="badge bg-success">Accepted</span>
