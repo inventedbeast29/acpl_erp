@@ -435,11 +435,39 @@ app.post("/purchase_license_details",(req,res)=>{
 })
 
 
+app.post("/query_serial", (req, res) => {
+  const { prefix } = req.body;
+  const query = `
+    SELECT serial_no FROM purchase_query 
+    WHERE serial_no LIKE ? 
+    ORDER BY serial_no DESC 
+    LIMIT 1`;
+  
+  db.query(query, [`${prefix}%`], (err, rows) => {
+    if (err) {
+      console.log("Error generating serial:", err);
+      return res.status(500).json({ status: "error", message: "Server error" });
+    }
+
+    let nextNumber = 1;
+    if (rows.length > 0) {
+      const lastSerial = rows[0].serial_no;
+      const numberPart = parseInt(lastSerial.replace(prefix, ""), 10);
+      nextNumber = numberPart + 1;
+    }
+
+    const serial_no = `${prefix}${String(nextNumber).padStart(2, "0")}`;
+    res.json({ status: "success", serial_no });
+  });
+});
+
+
 app.post("/purchase_query",(req,res)=>{
   const userInfo=req.user.email;
-const {customername,worktype,subwork,license_detail,govt_branch,remarks,querydate,assignedto,query_sts,queryclose_date}=req.body;
-  const query="Insert into purchase_query(customer_name,work_type,sub_work,item_detail,govt_branch,remarks,query_date,assigned_to,query_sts,queryclose_date,updated_by,last_updated)values(?,?,?,?,?,?,?,?,?,?,?,Now())"
-  db.query(query,[customername,worktype,subwork,license_detail,govt_branch,remarks,querydate,assignedto,query_sts,queryclose_date,userInfo],(err,pquery)=>{
+const {customername,worktype,subwork,license_detail,govt_branch,remarks,querydate,assignedto,query_sts,queryclose_date,serial_no}=req.body;
+
+  const query="Insert into purchase_query(customer_name,work_type,sub_work,item_detail,govt_branch,remarks,query_date,assigned_to,query_sts,queryclose_date,updated_by,last_updated,serial_no)values(?,?,?,?,?,?,?,?,?,?,?,Now(),?)"
+  db.query(query,[customername,worktype,subwork,license_detail,govt_branch,remarks,querydate,assignedto,query_sts,queryclose_date,userInfo,serial_no],(err,pquery)=>{
     if(err){
       console.log("Unable to create Purchase",err)
       return res.send("Unable to create purchase");
@@ -504,6 +532,8 @@ app.get("/view/purchase/:query_id",(req,res)=>{
 res.render("purchase_view",{result})
   })
 })
+
+
 
 
 //Add License Type details

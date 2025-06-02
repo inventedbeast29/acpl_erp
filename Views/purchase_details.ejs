@@ -57,7 +57,11 @@
       <form action="/purchase_query" method="POST">
         <div class="row mb-3">
           <!-- Customer Name Dropdown -->
-          <div class="col-md-6">
+           <div class="col-md-2">
+            <label class="form-label">Reference No.</label>
+            <input type="text" class="form-control" id="serial_no" name="serial_no" readonly  style="background-color: rgb(168, 180, 193)">
+           </div>
+          <div class="col-md-5">
             <label for="customerName" class="form-label">Customer Name</label>
             <select class="form-select" id="customerName" name="customername" required>
               <option value="" selected disabled>Select Customer</option>
@@ -68,7 +72,7 @@
           </div>
 
           <!-- Type of Work Dropdown -->
-          <div class="col-md-6">
+          <div class="col-md-5">
             <label for="workType" class="form-label">Application Type</label>
             <select class="form-select" id="workType" name="worktype" required>
               <option value="" selected disabled>Select Application Type</option>
@@ -76,11 +80,11 @@
             <option value="<%= at.application_type %>"><%= at.application_type %>
       </option>
        <%})%>
+
               <!-- Add more work types dynamically if needed -->
             </select>
           </div>
         </div>
-
 
         <div class="row mb-3">
           <div class="col-md-4">
@@ -95,7 +99,7 @@
       </div>
     <div class="col-md-8">
       <label for="license_detail" class="form-label">License Details</label>
-      <textarea class="form-control" name="license_detail" style="background-color: rgb(125, 133, 142);" id="license_detail" readonly></textarea>
+      <textarea class="form-control" name="license_detail" style="background-color: rgb(165, 183, 192);" id="license_detail" readonly></textarea>
     </div>
         </div>
           <!-- Date of Query -->
@@ -174,11 +178,35 @@
           license_detail.value=data.lic_detail;
         }
   })
+document.getElementById("workType").addEventListener("change", async function () {
+  const type = this.value;
+  let prefix = "";
+
+  if (type === "Medical Devices") prefix = "MD";
+  else if (type === "COSMETICS") prefix = "COS";
+  else if (type === "SAINTARY IMPORT PERMIT(SIP)") prefix = "SIP";
+
+  if (prefix !== "") {
+    const response = await fetch("/query_serial", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prefix })
+    });
+
+    const data = await response.json();
+    if (data.status === "success") {
+      document.getElementById("serial_no").value = data.serial_no;
+      console.log("Serial set:", data.serial_no);
+    }
+  }
+});
+
 
   $(document).ready(function() {
     $('.select2').select2();
   });
 
+ 
 
 </script>
 </body>

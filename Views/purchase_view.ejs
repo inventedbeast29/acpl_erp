@@ -57,7 +57,12 @@
       <form>
         <div class="row mb-3">
           <!-- Customer Name Dropdown -->
-          <div class="col-md-6">
+            <div class="col-md-4">
+              <label for="serial_no" class="form-label">Ref. No</label>
+              <input type="text" class="form-control" value="<%= result.serial_no %>" disabled>
+            </div>
+
+          <div class="col-md-4">
             <label for="customerName" class="form-label">Customer Name</label>
             <input type="text" class="form-control" name="cust_name" disabled value="<%=result.customer_name%>">
             
@@ -65,7 +70,7 @@
           </div>
 
           <!-- Type of Work Dropdown -->
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label for="workType" class="form-label">Application Type</label>
             <input type="text" class="form-control" name="worktype" disabled value="<%=result.work_type%>">
           </div>
