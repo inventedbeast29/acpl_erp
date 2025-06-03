@@ -51,7 +51,7 @@
             
             <!-- Customer Details Row -->
             <div class="row mb-3">
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="customerName" class="form-label">Customer Name</label>
                 <select id="customerName" name="customerName" class="form-select select2 " required>
                   <option value="">Select Customer</option>
@@ -61,7 +61,18 @@
                 </select>
               </div>
 
-              <div class="col-md-6">
+               <div class="col-md-4">
+                  <label for="refno" class="form-label">Select Ref No.</label>
+                  <select id="refno" name="refno" class="form-control select2" required> 
+                    <option value="">Select Ref No</option>   
+             <% serial_no.forEach(function(sno){ %>
+                 <option value="<%= sno.serial_no %>"><%= sno.serial_no %></option>
+             <% })%>
+                    </select>
+                </div>
+
+
+              <div class="col-md-4">
                 <label for="quotation_sts" class="form-label">Quotation Status</label>
                 <select id="quotation_sts" name="quotation_sts" class="form-select " required>
                   <option value="New">New</option>

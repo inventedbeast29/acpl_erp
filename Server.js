@@ -590,7 +590,13 @@ app.get("/add_quotation",(req,res)=>{
   db.query(query1,(err,form_name)=>{
     if(err){console.log(err)}
   
-  res.render("add_quotation",{customers,form_name})
+    const query2="select serial_no from purchase_query"
+    db.query(query2,(err,serial_no)=>{
+      if(err){console.log(err)}
+      
+      console.log(serial_no)
+      res.render("add_quotation",{customers,form_name,serial_no})
+    })
 })
 })
 })
@@ -598,15 +604,15 @@ app.get("/add_quotation",(req,res)=>{
 
 app.post("/submit_quotation",(req,res)=>{
   let userInfo=req.user.email
-  const {customerName,gst,quotation_sts,quotationNo,totalTax,totalDiscamt,totalQty,grandTotal,paymentTerms,termsConditions,govtfee,constfee,remarks}=req.body
+  const {customerName,gst,quotation_sts,quotationNo,totalTax,totalDiscamt,totalQty,grandTotal,paymentTerms,termsConditions,govtfee,constfee,remarks,refno}=req.body
  
  //console.log(customerName,quotationDate,quotationNo,totalQty,grandTotal,"Paymentterm",paymentTerms,"termsConditions",termsConditions,"remark",remarks);
-    const query="Insert into quotation (cust_name,gst,qtn_date,quotation_no,total_qty,totalTax,total_disc,total_amt,quotation_sts,govtfee,const_fee,created_by)values(?,?,Now(),?,?,?,?,?,?,?,?,?) "
+    const query="Insert into quotation (cust_name,gst,qtn_date,quotation_no,total_qty,totalTax,total_disc,total_amt,quotation_sts,govtfee,const_fee,created_by,p_query_ref_no)values(?,?,Now(),?,?,?,?,?,?,?,?,?,?) "
     const query2 = "INSERT INTO quotation_items (quotation_no, item_desc, quantity, unit_price, discount_amt, tax_amt, total_amt,payment_term,term_condition,notes) VALUES (?, ?, ?, ?, ?, ?,?,?,?, ?)";
    const   {item_desc,quantity,unitPrice,discount,tax,amount}=req.body
   // console.log(item_desc,quantity,unitPrice,discount,tax,amount)
     
-    db.query(query,[customerName,gst,quotationNo,totalQty,totalTax,totalDiscamt,grandTotal,quotation_sts,govtfee,constfee,userInfo],(err,result)=>{
+    db.query(query,[customerName,gst,quotationNo,totalQty,totalTax,totalDiscamt,grandTotal,quotation_sts,govtfee,constfee,userInfo,refno],(err,result)=>{
       if(err){
         console.log("error inserting quotation details",err)
       }
@@ -642,7 +648,7 @@ app.post("/submit_quotation",(req,res)=>{
 
 app.get("/quotation_dashboard",(req,res)=>{
 // const query="select * from quotation";
-    const query2="SELECT quotation.id, quotation.quotation_no, quotation.cust_name,quotation.total_qty,quotation.total_amt,quotation.qtn_date,quotation.quotation_sts,quotation.acc_rej_date,quotation.last_updated,quotation.updated_by,quotation.created_by,quotation.sent_date,sales_invoice.invoice_no FROM quotation LEFT JOIN sales_invoice ON quotation.quotation_no = sales_invoice.quotation_no";
+    const query2="SELECT quotation.id, quotation.quotation_no, quotation.cust_name,quotation.total_qty,quotation.total_amt,quotation.qtn_date,quotation.quotation_sts,quotation.acc_rej_date,quotation.last_updated,quotation.updated_by,quotation.created_by,quotation.sent_date,quotation.p_query_ref_no, sales_invoice.invoice_no FROM quotation LEFT JOIN sales_invoice ON quotation.quotation_no = sales_invoice.quotation_no";
     db.query(query2,(err,result)=>{
       if(err){console.log(err)}
       console.log(result)

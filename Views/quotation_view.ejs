@@ -52,24 +52,31 @@
               </div>
 
               <div class="col-md-4">
+                <label for="refno" class="form-label">Reference No</label>
+                <input type="text" class="form-control" value="<%= qresult.p_query_ref_no %>" disabled>
+              </div>
+
+              <div class="col-md-4">
                 <label for="sent_date" class="form-label">Quotation Sent On</label>
                 <input type="text" class="form-control" value="<%= sdate %>" disabled>
               </div>
-              <div class="col-md-4">
-                <label for="quotation_sts" class="form-label">Quotation Status</label>
-               <input type="text" class="form-control" disabled value="<%= qresult.quotation_sts %>">
-            </div>
+             
             </div>
 
             <!-- Valid Till Date Row -->
             <div class="row mb-3">
                 
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label for="quotationNo" id="quotationNo" class="form-label">Quotation No</label>
                   <input type="text" id="quotationNo" name="quotationNo" class="form-control"disabled value="<%=qresult.quotation_no  %>">
                 </div>
-                  
-                <div class="col-md-6">
+
+                   <div class="col-md-4">
+                <label for="quotation_sts" class="form-label">Quotation Status</label>
+               <input type="text" class="form-control" disabled value="<%= qresult.quotation_sts %>">
+            </div>
+
+                <div class="col-md-4">
                 <label for="gst" id="gst" class="form-label">GSTIN (If Applicable)</label>
                 <input type="text" id="gst" name="gst" class="form-control" disabled value="<%= qresult.gst%>">
               </div>

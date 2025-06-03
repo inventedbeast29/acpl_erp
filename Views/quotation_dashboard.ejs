@@ -93,6 +93,7 @@
             <thead class="table-dark">
                 <tr>
                     <th>Quotation No</th>
+                    <th>Reference No</th>
                     <th>Customer Name</th>
                     <th>Total Quantity</th>
                     <th>Total Amount</th>
@@ -116,6 +117,9 @@
                         <tr>
                             <td>
                                 <%= quotation.quotation_no %>
+                            </td>
+                            <td>
+                             <a href="/purchase_dashboard" ><%=quotation.p_query_ref_no %></a>
                             </td>
                             <td>
                                 <%= quotation.cust_name %>
