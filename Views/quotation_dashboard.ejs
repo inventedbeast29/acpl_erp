@@ -112,8 +112,6 @@
                 <% if (result && result.length> 0) { %>
                     <% result.forEach(function(quotation,index) { %>
                         <% let created_on=new Date(quotation.qtn_date).toLocaleDateString('en-GB').split(",") %>
-                       <% let date=new Date(quotation.sent_date).toLocaleDateString('en-GB').split(",") %>
-                       
                         <tr>
                             <td>
                                 <%= quotation.quotation_no %>
@@ -134,7 +132,7 @@
                                 <%=created_on%>
                             </td>
                             <td><%= quotation.created_by %> </td>
-                            <td><%=date[0]?date[0]:" " %></td>
+                            <td><%=(quotation.sent_date && quotation.sent_date !== '0000-00-00')? new Date(quotation.sent_date).toLocaleDateString('en-GB'): "" %> %></td>
                             <td>
                                 <% if (quotation.quotation_sts==='Accepted' ) { %>
                                     <span class="badge bg-success">Accepted</span>
