@@ -106,8 +106,8 @@
                     <td><%= lic_detail.submitted_by %></td>
                     <td><%= lic_detail.license_no %></td>
                     <td><%=lic_detail.license_expiry %></td>
-                    <td><%= sent_to_customer[0] %></td>
-                    <% if(sent_to_customer){ %>
+                    <td><%= lic_detail.sent_to_customer ? new Date(lic_detail.sent_to_customer).toLocaleDateString('en-GB'):"" %></td>
+                    <% if(lic_detail.sent_to_customer){ %>
                         <td><span class="badge bg-success text-dark">Completed</span></td>
                     <% } 
                      else{ %>
