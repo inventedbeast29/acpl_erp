@@ -131,8 +131,8 @@
                             <td>
                                 <%=created_on%>
                             </td>
-                            <td><%= quotation.created_by %> </td>
-                            <td><%=(quotation.sent_date && quotation.sent_date !== '0000-00-00')? new Date(quotation.sent_date).toLocaleDateString('en-GB'): "" %> %></td>
+                           <td><%= quotation.created_by %> </td>
+                            <td><%=(quotation.sent_date && quotation.sent_date !== '0000-00-00')? new Date(quotation.sent_date).toLocaleDateString('en-GB'): "" %></td>
                             <td>
                                 <% if (quotation.quotation_sts==='Accepted' ) { %>
                                     <span class="badge bg-success">Accepted</span>
