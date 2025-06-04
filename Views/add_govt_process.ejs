@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Customer-Government Interaction Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+.border{
+  box-shadow:0px 1px 3px 1px rgb(0, 0, 0);
+}
+    .card-section {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      border-radius: 0 0 5px 5px;
+      padding: 20px;
+      background-color: #fff;
+      margin-bottom: 30px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <a href="/govt_process_dashboard" class="btn btn-primary">Back To Dashboard</a>
+<div class="container mt-5 border border-2">
+  <h2 class="mb-4 text-center">Government Process Form</h2>
+  <form action="/submit_govt_process" method="post">
+<hr>
+    <h4>License & Customer Details </h4>
+      <div class="card-section">
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label for="refno" class="form-label">Select Reference No</label>
+        <select name="refno" class="form-select" id="refno" required>
+          <option value="">Select Reference No</option>
+          <% result.forEach(function(sno) { %>
+             <option value="<%=sno.serial_no%>"><%=sno.serial_no %></option>
+          <% }); %>
+        </select>
+      </div>
+      
+    
+      <div class="col-md-3">
+        <label for="cust_name" class="form-label">Customer Name</label>
+        <input type="text" class="form-control" name="cust_name" id="cust_name" readonly required placeholder="Auto-Populate based on Reference No" style="background-color: rgb(163, 163, 163);">
+      </div>
+      <div class="col-md-3">
+        <label for="licence" class="form-label">License Name</label>
+        <input type="text" class="form-control" name="licence" id="licence" readonly required placeholder="Auto-Populate based on Reference No" style="background-color: rgb(163, 163, 163);">
+      </div>
+      <div class="col-md-3">
+        <label for="govt_branch" class="form-label">Concerned Govt Dept.</label>
+        <input type="text" class="form-control" name="govt_branch" id="govt_branch" readonly required placeholder="Auto-Populate based on Reference No" style="background-color: rgb(163, 163, 163);">
+      </div>
+    </div>
+    </div>
+<hr>
+    <!-- Initial Submission -->
+   <h4>Initial Submission</h4>
+    <div class="card-section">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="customer_documents" class="form-label">Documents sent by customer</label>
+          <input type="date" class="form-control" id="customer_documents" name="customer_documents" required />
+        </div>
+        <div class="col-md-6">
+          <label for="documentdetails" class="form-label">Document Details(Name)</label>
+          <input type="text" class="form-control" name="documentdetails">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="application_submission_date" class="form-label">Application submitted to Government portal</label>
+          <input type="date" class="form-control" id="application_submission" name="application_submission_date" required />
+        </div>
+        <div class="col-md-6">
+          <label for="submitted_by_employee" class="form-label" >Submitted By Employee</label>
+          <select class="form-control"  name="submitted_by_employee" required>
+            <option value="">Select Employee</option>
+            <% emp.forEach(function(employee){ %>
+                <option value="<%= employee.name %>"><%=employee.name%></option>
+            <%}) %>
+          </select>
+        </div>
+      </div>
+    </div>
+<hr>
+
+    <!-- Final Section -->
+     <h4>License Received Details</h4>
+    <div class="card-section">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="received_from_govt_date" class="form-label">License received from Govt Dept</label>
+          <input type="date" class="form-control" id="received_from_govt" name="received_from_govt_date" />
+        </div>
+        <div class="col-md-6">
+        <label for="license_no" class="form-label">License/Certificate No</label>
+        <input type="text" name="license_no" class="form-control">
+        </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+        <label for="license_note" class="form-label">License Detail (If any)</label>
+        <input type="text" name="license_note" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label for="expiry_date" class="form-label">License Expiry Date(If Any)</label>
+        <input type="date" name="expiry_date" class="form-control">
+      </div>
+      </div>
+      </div>
+      <hr>
+      <div class="row justify-content-center" >
+        <div class="col-md-6 mb-3 text-center">
+        <label for="sent_to_customer" class="form-label" style="text-align: center;">License Sent to Customer</label>
+        <input type="date" class="form-control" name="sent_to_customer" style="width: 50vw;">
+      </div>
+      </div>
+      <hr>
+      <div class="text-center">
+      <button type="submit" class="btn btn-primary mt-4 px-5">Submit</button>
+    </div>
+    </div>
+
+    
+
+  </form>
+</div>
+
+<script>
+  document.getElementById("refno").addEventListener("change", async function () {
+    const refnovalue = this.value;
+    if (!refnovalue) {
+      // Clear fields if nothing selected
+      document.getElementById("cust_name").value = "";
+      document.getElementById("licence").value = "";
+      document.getElementById("govt_branch").value = "";
+      return;
+    }
+
+    try {
+      const response = await fetch("/details", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refnovalue })
+      });
+
+      if (!response.ok) throw new Error("Network response was not ok");
+
+      const result = await response.json();
+
+      if (result.result2) {
+        document.getElementById("cust_name").value = result.result2.customer_name || "";
+        document.getElementById("licence").value = result.result2.sub_work || "";
+        document.getElementById("govt_branch").value = result.result2.govt_branch || "";
+      } else {
+        document.getElementById("cust_name").value = "";
+        document.getElementById("licence").value = "";
+        document.getElementById("govt_branch").value = "";
+      }
+    } catch (error) {
+      console.error("Error fetching details:", error);
+      document.getElementById("cust_name").value = "";
+      document.getElementById("licence").value = "";
+      document.getElementById("govt_branch").value = "";
+    }
+  });
+</script>
+
+</body>

@@ -69,7 +69,8 @@ console.log("data from frontend is",data);
 bcrypt.genSalt(10, function(err, salt) {
     bcrypt.hash(password, salt, function(err, hash) {
         // Store hash in your password DB.
-        console.log("Hashed Password is",hash)
+     //
+     //    console.log("Hashed Password is",hash)
 
 const sql="INSERT INTO users (name,email,password,phone)VALUES(?,?,?,?)"
  db.query(sql,[name,email,hash,phone],(err,result)=>{
@@ -101,7 +102,7 @@ main()
         console.log(err)
         return res.status(500)
       }
-      console.log(urole)
+     // console.log(urole)
       res.render("login",{urole})
       })
    
@@ -261,7 +262,7 @@ if(result){
       subject: "Login Details✔", // Subject line
     text: `Greetings,\n\nNew User has been added  ${name} !\n\nYour login credentials:\nEmail: ${email}\nPassword: ${password}\nRole:${role} \n\n Please keep this safe.`  
 })
-  console.log("Employee added")
+//  console.log("Employee added")
  // console.log(result)
   
   res.redirect("/employee");
@@ -281,9 +282,9 @@ app.get("/updateuser/:id",(req,res)=>{
 
 app.post("/updateuser/:id",(req,res)=>{
   const id=req.params.id
-  console.log("id",id);
+//  console.log("id",id);
   const password2=req.body.password
-    console.log(password2)
+ //   console.log(password2)
   bcrypt.genSalt(10, function(err, salt) {
     bcrypt.hash(password2, salt, function(err, hash) {
       if(err){console.log("Cannot Hash")}
@@ -386,7 +387,7 @@ app.get("/view/customer/:cust_id",(req,res)=>{
   db.query(query,[id],(err,result)=>{
       if(err){return res.send("Unable to view"),err}
       let customer=result[0];
-      console.log(customer)
+    //  console.log(customer)
       res.render("view_customer",{customer})
   })
 })
@@ -493,7 +494,7 @@ const {customername,worktype,subwork,license_detail,govt_branch,remarks,querydat
       db.query(query,[id],(err,result)=>{
         if(err){return res.send("Error")}
       let pquery=result[0];
-      console.log(pquery)
+  //    console.log(pquery)
         res.render("purchase_edit",{pquery})
       })
     
@@ -594,7 +595,7 @@ app.get("/add_quotation",(req,res)=>{
     db.query(query2,(err,serial_no)=>{
       if(err){console.log(err)}
       
-      console.log(serial_no)
+  //    console.log(serial_no)
       res.render("add_quotation",{customers,form_name,serial_no})
     })
 })
@@ -651,7 +652,7 @@ app.get("/quotation_dashboard",(req,res)=>{
     const query2="SELECT quotation.id, quotation.quotation_no, quotation.cust_name,quotation.total_qty,quotation.total_amt,quotation.qtn_date,quotation.quotation_sts,quotation.acc_rej_date,quotation.last_updated,quotation.updated_by,quotation.created_by,quotation.sent_date,quotation.p_query_ref_no, sales_invoice.invoice_no FROM quotation LEFT JOIN sales_invoice ON quotation.quotation_no = sales_invoice.quotation_no";
     db.query(query2,(err,result)=>{
       if(err){console.log(err)}
-      console.log(result)
+  //    console.log(result)
 
       res.render("quotation_dashboard",{result});
     })
@@ -721,7 +722,7 @@ app.get("/edit-quotation/:id",(req,res)=>{
 app.post("/delete-quotation/:id",(req,res)=>{
   const query="Delete from quotation where id=?"
   const{id}=req.params
-  console.log(id);
+//  console.log(id);
   db.query(query,[id],(err,result)=>{
       if(err){
         console.log("Error deleting quotaiton",err);
@@ -981,7 +982,50 @@ app.get("/reminders",(req,res)=>{
 })
   })
 
+app.get("/govt-process",(req,res)=>{
+   const query="select serial_no from purchase_query";
+    const query2="Select name from users"
+    db.query(query,(err,result)=>{
+      if(err){console.log(err)}
+      db.query(query2,(err,emp)=>{
+        if(err){console.log(err)}
+        res.render("add_govt_process",{result,emp})
+})
+    })
+  })
+
+  app.post("/details",(req,res)=>{
+    const {refnovalue}=req.body;
+    const query="Select * from purchase_query where serial_no=?"
+    db.query(query,[refnovalue],(err,result)=>{
+      if(err){console.log(err)}
+      const result2=result[0]
+      res.json({result2})
+    })
+  })
+
+  app.post("/submit_govt_process",(req,res)=>{
+    const received_from_govt_date2=req.body.received_from_govt_date||null;
+    const expiry_date2=req.body.expiry_date||null;
+    const sent_to_customer2=req.body.sent_to_customer||null;
+
+    const {refno,cust_name,licence,govt_branch,customer_documents,documentdetails,application_submission_date,submitted_by_employee,license_no,license_note}=req.body
+      const query="Insert into govt_process (ref_no,cust_name,license_name,concerned_dept,customer_doc_sent,doc_details,submitted_to_gov,submitted_by,license_rec_date,license_no,license_details,license_expiry,sent_to_customer)values(?,?,?,?,?,?,?,?,?,?,?,?,?)"
+        db.query(query,[refno,cust_name,licence,govt_branch,customer_documents,documentdetails,application_submission_date,submitted_by_employee,received_from_govt_date2,license_no,license_note,expiry_date2,sent_to_customer2],(err,result)=>{
+          if(err){console.log(err) ;return}
+          res.redirect("/govt_process_dashboard")
+        })
   
+    })
+
+    app.get("/govt_process_dashboard",(req,res)=>{
+      const query="Select * from govt_process"
+      db.query(query,(err,result)=>{
+        if(err){console.log(err); return res.send("error")}
+        //console.log(result)
+        res.render("govt_process_dashboard",{result})
+      })
+    })
 
 
 app.listen(4444,(err)=>{

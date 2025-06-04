@@ -37,6 +37,14 @@
   max-width: 4vw !important;
   background-color: rgba(44, 31, 31, 0.078);
 }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  display: none;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
 </style>
 <body>
   <a href="/quotation_dashboard" class="btn btn-primary mx-3">Back to Dashboard</a>
