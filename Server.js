@@ -1007,13 +1007,12 @@ app.get("/govt-process",(req,res)=>{
   app.post("/submit_govt_process",(req,res)=>{
     const received_from_govt_date2=req.body.received_from_govt_date||null;
     const expiry_date2=req.body.expiry_date||null;
-    if (!req.body.sent_to_customer || req.body.sent_to_customer === '0000-00-00') {
-      sent_to_customer2 = null;
-}
+   const application_submission_date2= req.body.application_submission_date && req.body.application_submission_date!="0000-00-00"?req.body.application_submission_date:null
+   const sent_to_customer2= req.body.sent_to_customer && req.body.sent_to_customer != '0000-00-00'?req.body.sent_to_customer:null
 
-    const {refno,cust_name,licence,govt_branch,customer_documents,documentdetails,application_submission_date,submitted_by_employee,license_no,license_note}=req.body
+    const {refno,cust_name,licence,govt_branch,customer_documents,documentdetails,submitted_by_employee,license_no,license_note}=req.body
       const query="Insert into govt_process (ref_no,cust_name,license_name,concerned_dept,customer_doc_sent,doc_details,submitted_to_gov,submitted_by,license_rec_date,license_no,license_details,license_expiry,sent_to_customer)values(?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        db.query(query,[refno,cust_name,licence,govt_branch,customer_documents,documentdetails,application_submission_date,submitted_by_employee,received_from_govt_date2,license_no,license_note,expiry_date2,sent_to_customer2],(err,result)=>{
+        db.query(query,[refno,cust_name,licence,govt_branch,customer_documents,documentdetails,application_submission_date2,submitted_by_employee,received_from_govt_date2,license_no,license_note,expiry_date2,sent_to_customer2],(err,result)=>{
           if(err){console.log(err) ;return}
           res.redirect("/govt_process_dashboard")
         })
@@ -1028,7 +1027,70 @@ app.get("/govt-process",(req,res)=>{
         res.render("govt_process_dashboard",{result})
       })
     })
+    app.get("/govt-process-edit/:id",(req,res)=>{
+      const {id}=req.params;
+      const {ref}=req.query;
+  
+      const query="Select * from govt_process where id=?";
+      const query2="Select * from govt_process_queries where ref_no=?"
+        db.query(query,[id],(err,result)=>{
+          if(err){console.log(err);return res.json(err)}
+          const result2=result[0]
+         // console.log(result2)
+          db.query(query2,[ref],(err,govt_query)=>{
+            if(err){console.log(err);return res.send("error")}
+            console.log(govt_query)
+            res.render("edit_govt_process",{result2,govt_query})
+          })
+        })
+    })
 
+
+
+app.post("/edit_govt_process/:refno", (req, res) => {
+  const { refno } = req.params;
+  const queries = req.body.queries;
+
+  
+    // Step 2: Insert new queries from the form
+    if (queries && Array.isArray(queries)) {
+      const insertQuery = `
+        INSERT INTO govt_process_queries 
+        (ref_no, query_detail, query_raised_date, query_replied_date, doc_resubmitted_date)
+        VALUES (?, ?, ?, ?, ?)
+      `;
+
+      queries.forEach((query) => {
+        const detail = query.detail || null;
+        const raisedDate = query.raised_date || null;
+        const repliedDate = query.replied_date || null;
+        const resubmittedDate = query.resubmitted_date || null;
+
+        db.query(
+          insertQuery,
+          [refno, detail, raisedDate, repliedDate, resubmittedDate],
+          (insertErr) => {
+            if (insertErr) {
+              console.error("Error inserting query:", insertErr);
+              // Not returning here so other queries can still be inserted
+            }
+          }
+        );
+      });
+    }
+
+    res.redirect("/govt_process_dashboard");
+  });
+
+app.post("/replied_date/:id",(req,res)=>{
+  const {id}=req.params;
+  const {replied_date}=req.body
+  const query="Update govt_process_queries set query_replied_date=? where id=?"
+  db.query(query,[replied_date,id],(err,result)=>{
+    if(err){console.log(err);return res.send("error")}
+   res.redirect("/govt_process_dashboard")
+  })
+})
 
 app.listen(4444,(err)=>{
 if(err){console.log(err.message,"Unable to start server")}

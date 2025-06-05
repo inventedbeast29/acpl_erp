@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Customer-Government Interaction Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .border {
+      box-shadow: 0px 1px 3px 1px rgb(0, 0, 0);
+    }
+    .card-section {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      border-radius: 0 0 5px 5px;
+      padding: 20px;
+      background-color: #fff;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<a href="/govt_process_dashboard" class="btn btn-primary">Back To Dashboard</a>
+
+<div class="container mt-5 border border-2">
+  <h2 class="mb-4 text-center">Government Process Form</h2>
+  <form action="/edit_govt_process/<%= result2.ref_no %>" method="post">
+
+    <hr>
+    <h4>License & Customer Details</h4>
+    <div class="card-section">
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <label class="form-label">Select Reference No</label>
+          <input type="text" name="refno" class="form-control" value="<%= result2.ref_no %>">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Customer Name</label>
+          <input type="text" class="form-control" name="cust_name" readonly value="<%= result2.cust_name %>">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">License Name</label>
+          <input type="text" class="form-control" name="licence" readonly value="<%= result2.license_name %>">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Concerned Govt Dept.</label>
+          <input type="text" class="form-control" name="govt_branch" readonly value="<%= result2.concerned_dept %>">
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <h4>Initial Submission</h4>
+    <div class="card-section">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Documents sent by customer</label>
+          <input type="text" class="form-control" name="customer_documents" value="<%= result2.customer_doc_sent %>" <%= result2.customer_doc_sent ? 'readonly' : '' %>>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Document Details(Name)</label>
+          <input type="text" class="form-control" name="documentdetails" value="<%= result2.doc_details %>">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Application submitted to Government portal</label>
+          <input type="text" class="form-control" name="application_submission_date" value="<%= result2.submitted_to_gov %>" <%= result2.submitted_to_gov ? 'readonly' : '' %>>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Submitted By Employee</label>
+          <input type="text" class="form-control" name="submitted_by_employee" value="<%= result2.submitted_by %>" <%= result2.submitted_by ? 'readonly' : '' %>>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <h4>Previous Query Details</h4>
+    <div class="container">
+      <% govt_query.forEach(function(query) { %>
+        <div class="row mb-3 border border-1 p-2" data-query-id="<%= query.id %>">
+          <div class="col-md-6">
+            <label class="form-label">Query Details</label>
+            <input type="text" class="form-control" value="<%= query.query_detail %>" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Query Raised Date</label>
+            <input type="text" class="form-control" value="<%= query.query_raised_date %>" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Query Replied Date</label>
+            <input type="date" class="form-control view_replied_date"
+              value="<%= query.query_replied_date ? query.query_replied_date.toISOString().split('T')[0] : '' %>"
+              <%= query.query_replied_date ? 'readonly' : '' %> >
+          </div>
+          <div class="col-md-6 mt-4">
+            <% if (!query.query_replied_date) { %>
+              <button type="button" class="btn btn-success dateUpdate">Update Replied Date</button>
+            <% } else { %>
+              <span class="text-muted">Already updated</span>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="card p-3 mb-3 mt-3">
+      <h5>Add Government Queries</h5>
+      <div id="query-container"></div>
+      <button type="button" class="btn btn-warning mt-2" onclick="addQuery()">Add New Query</button>
+    </div>
+
+    <h4>License Received Details</h4>
+    <div class="card-section">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">License received from Govt Dept</label>
+          <input type="date" class="form-control" name="received_from_govt_date">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">License/Certificate No</label>
+          <input type="text" name="license_no" class="form-control">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label">License Detail (If any)</label>
+          <input type="text" name="license_note" class="form-control">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">License Expiry Date (If any)</label>
+          <input type="date" name="expiry_date" class="form-control">
+        </div>
+      </div>
+      <hr>
+      <div class="row justify-content-center">
+        <div class="col-md-6 mb-3 text-center">
+          <label class="form-label">License Sent to Customer</label>
+          <input type="date" class="form-control" name="sent_to_customer" style="width: 50vw;">
+        </div>
+      </div>
+      <hr>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary mt-4 px-5">Submit</button>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  let queryIndex = 0;
+  function addQuery() {
+    const container = document.getElementById("query-container");
+    const queryHTML = `
+      <div class="border rounded p-3 mb-3" id="query-${queryIndex}">
+        <div class="row mb-2">
+          <div class="col-md-3">
+            <label>Query Raised Date</label>
+            <input type="date" name="queries[${queryIndex}][raised_date]" class="form-control" />
+          </div>
+          <div class="col-md-6">
+            <label>Query Detail</label>
+            <input type="text" name="queries[${queryIndex}][detail]" class="form-control" />
+          </div>
+          <div class="col-md-3 text-end">
+            <button type="button" class="btn btn-danger mt-4" onclick="removeQuery(${queryIndex})">Remove</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <label>Query Replied Date</label>
+            <input type="date" name="queries[${queryIndex}][replied_date]" class="form-control" />
+          </div>
+          <div class="col-md-3">
+            <label>Document Resubmitted Date</label>
+            <input type="date" name="queries[${queryIndex}][resubmitted_date]" class="form-control" />
+          </div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML("beforeend", queryHTML);
+    queryIndex++;
+  }
+
+  function removeQuery(index) {
+    const element = document.getElementById(`query-${index}`);
+    if (element) element.remove();
+  }
+
+  document.querySelectorAll(".dateUpdate").forEach(button => {
+    button.addEventListener("click",async function () {
+      const row = button.closest(".row");
+      const queryId = row.dataset.queryId;
+      const replied_date = row.querySelector(".view_replied_date").value;
+
+      console.log("queryId:", queryId);
+      console.log("replied_date:", replied_date);
+
+        const response=await fetch(`/replied_date/${queryId}`,{
+          method:"POST",
+          headers:{
+            'content-type':'application/json'
+          },
+          body:JSON.stringify({replied_date})
+        })
+
+    });
+  });
+</script>
+</body>
+</html>

@@ -59,6 +59,7 @@
 
   <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="/main" class="btn btn-primary">Back to Home</a>
       <h4 class="fw-semibold">All Submissions</h4>
       <a href="/govt-process" class="btn btn-primary">+ New License Entry</a>
     </div>
@@ -90,9 +91,6 @@
                    <% const doc_customer_date=new Date(lic_detail.customer_doc_sent).toLocaleDateString('en-GB') %>
                    <% const customer_doc_sentdate=doc_customer_date.split(",") %>
 
-                   <% const submit_to_govt_date=new Date(lic_detail.submitted_to_gov).toLocaleDateString('en-GB') %>
-                   <%const submmited_to_gov=submit_to_govt_date.split(",") %>
-
                    <% const sent_to_customer_date=new Date(lic_detail.sent_to_customer).toLocaleDateString('en-GB') %>
                    <%const sent_to_customer=sent_to_customer_date.split(",") %>
 
@@ -102,7 +100,7 @@
                     <td><%=lic_detail.license_name %></td>
                     <td><%=lic_detail.concerned_dept %></td>
                     <td><%= customer_doc_sentdate[0] %></td>
-                    <td><%=submmited_to_gov[0] %></td>
+                    <td><%= lic_detail.submitted_to_gov?new Date(lic_detail.submitted_to_gov).toLocaleDateString('en-GB'):"" %></td>
                     <td><%= lic_detail.submitted_by %></td>
                     <td><%= lic_detail.license_no %></td>
                     <td><%=lic_detail.license_expiry %></td>
@@ -115,8 +113,8 @@
                     <% } %>
                     
                  <td>
-                <a href="/view/:<%=lic_detail.id%>" class="btn btn-sm btn-outline-primary">View</a>
-                <a href="/edit/:<%=lic_detail.id%>" class="btn btn-sm btn-outline-warning">Edit</a>
+                <a href="/govt-process-view/<%=lic_detail.id%>" class="btn btn-sm btn-outline-primary">View</a>
+                <a href="/govt-process-edit/<%=lic_detail.id%>?ref=<%=lic_detail.ref_no%>" class="btn btn-sm btn-outline-warning">Edit</a>
               </td>
                </tr>
                 <% }) %>
