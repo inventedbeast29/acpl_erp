@@ -114,11 +114,13 @@
       </div>
       </div>
       <hr>
-      <div class="row justify-content-center" >
-        <div class="col-md-6 mb-3 text-center">
+      <div class="row justify-content-around" >
+        <input type="hidden" class="form-control" name="status" id="status" value="Pending">
+        <div class="col-md-8 mb-3 ">
         <label for="sent_to_customer" class="form-label" style="text-align: center;">License Sent to Customer</label>
-        <input type="date" class="form-control" name="sent_to_customer" style="width: 50vw;">
+        <input type="date" class="form-control" name="sent_to_customer" id="sentdate" style="width: 50vw;">
       </div>
+     
       </div>
       <hr>
       <div class="text-center">
@@ -169,6 +171,8 @@
       document.getElementById("govt_branch").value = "";
     }
   });
+
+
 </script>
 
 </body>

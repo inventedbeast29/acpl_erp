@@ -1010,9 +1010,9 @@ app.get("/govt-process",(req,res)=>{
    const application_submission_date2= req.body.application_submission_date && req.body.application_submission_date!="0000-00-00"?req.body.application_submission_date:null
    const sent_to_customer2= req.body.sent_to_customer && req.body.sent_to_customer != '0000-00-00'?req.body.sent_to_customer:null
 
-    const {refno,cust_name,licence,govt_branch,customer_documents,documentdetails,submitted_by_employee,license_no,license_note}=req.body
-      const query="Insert into govt_process (ref_no,cust_name,license_name,concerned_dept,customer_doc_sent,doc_details,submitted_to_gov,submitted_by,license_rec_date,license_no,license_details,license_expiry,sent_to_customer)values(?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        db.query(query,[refno,cust_name,licence,govt_branch,customer_documents,documentdetails,application_submission_date2,submitted_by_employee,received_from_govt_date2,license_no,license_note,expiry_date2,sent_to_customer2],(err,result)=>{
+    const {refno,cust_name,licence,govt_branch,customer_documents,documentdetails,submitted_by_employee,license_no,license_note,status}=req.body
+      const query="Insert into govt_process (ref_no,cust_name,license_name,concerned_dept,customer_doc_sent,doc_details,submitted_to_gov,submitted_by,license_rec_date,license_no,license_details,license_expiry,sent_to_customer,sts)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+        db.query(query,[refno,cust_name,licence,govt_branch,customer_documents,documentdetails,application_submission_date2,submitted_by_employee,received_from_govt_date2,license_no,license_note,expiry_date2,sent_to_customer2,status],(err,result)=>{
           if(err){console.log(err) ;return}
           res.redirect("/govt_process_dashboard")
         })
@@ -1052,11 +1052,13 @@ app.get("/govt-process",(req,res)=>{
 app.post("/edit_govt_process/:refno", (req, res) => {
   const { refno } = req.params;
   const queries = req.body.queries;
-  const{license_no,license_note,expiry_date}=req.body
+  const{license_no,license_note}=req.body
   const received_from_govt_date2=req.body.received_from_govt_date||null
   const expiry_date2=req.body.expiry_date||null
   const sent_to_customer2=req.body.sent_to_customer||null
- 
+
+     const status=sent_to_customer2?"Completed":"Pending";
+
     // Step 2: Insert new queries from the form
     if (queries && Array.isArray(queries)) {
       const insertQuery = `
@@ -1083,8 +1085,8 @@ app.post("/edit_govt_process/:refno", (req, res) => {
         );
       });
     }
-    const query2="Update govt_process set license_rec_date=?,license_no=?,license_details=?,license_expiry=?,sent_to_customer=? where ref_no=?"
-      db.query(query2,[received_from_govt_date2,license_no,license_note,expiry_date2,sent_to_customer2,refno],(err,isnert)=>{
+    const query2="Update govt_process set license_rec_date=?,license_no=?,license_details=?,license_expiry=?,sent_to_customer=?,sts=? where ref_no=?"
+      db.query(query2,[received_from_govt_date2,license_no,license_note,expiry_date2,sent_to_customer2,status,refno],(err,isnert)=>{
           if(err){console.log(err);return res.send("error")}
           res.redirect("/govt_process_dashboard");
 
