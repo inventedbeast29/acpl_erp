@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <title>Customer-Government Interaction Form</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+      <!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+
   <style>
     body {
       background-color: #f8f9fa;
@@ -34,7 +38,7 @@
       <div class="row mb-3">
         <div class="col-md-3">
           <label class="form-label">Select Reference No</label>
-          <input type="text" name="refno" class="form-control" value="<%= result2.ref_no %>">
+          <input type="text" name="refno" class="form-control" value="<%= result2.ref_no %>"readonly>
         </div>
         <div class="col-md-3">
           <label class="form-label">Customer Name</label>
@@ -57,17 +61,17 @@
       <div class="row">
         <div class="col-md-6 mb-3">
           <label class="form-label">Documents sent by customer</label>
-          <input type="text" class="form-control" name="customer_documents" value="<%= result2.customer_doc_sent %>" <%= result2.customer_doc_sent ? 'readonly' : '' %>>
+          <input type="text" class="form-control" name="customer_documents" value="<%=new Date(result2.customer_doc_sent).toLocaleDateString('en') %>" <%= result2.customer_doc_sent ? 'readonly' : '' %>>
         </div>
         <div class="col-md-6">
           <label class="form-label">Document Details(Name)</label>
-          <input type="text" class="form-control" name="documentdetails" value="<%= result2.doc_details %>">
+          <input type="text" class="form-control" name="documentdetails" value="<%= result2.doc_details %>"<%=result2.doc_details?'readonly':'' %>>
         </div>
       </div>
       <div class="row">
         <div class="col-md-6 mb-3">
           <label class="form-label">Application submitted to Government portal</label>
-          <input type="text" class="form-control" name="application_submission_date" value="<%= result2.submitted_to_gov %>" <%= result2.submitted_to_gov ? 'readonly' : '' %>>
+          <input type="text" class="form-control" name="application_submission_date" value="<%=new Date(result2.submitted_to_gov).toLocaleDateString('en-GB') %>" <%= result2.submitted_to_gov ? 'readonly' : '' %>>
         </div>
         <div class="col-md-6">
           <label class="form-label">Submitted By Employee</label>
@@ -82,19 +86,33 @@
       <% govt_query.forEach(function(query) { %>
         <div class="row mb-3 border border-1 p-2" data-query-id="<%= query.id %>">
           <div class="col-md-6">
+            <label class="form-label">Query Raised Date</label>
+            <input type="text" class="form-control" value="<%= query.query_raised_date.toLocaleDateString('en-GB').split(",") %>" readonly>
+          </div>
+
+
+             <div class="col-md-6">
             <label class="form-label">Query Details</label>
             <input type="text" class="form-control" value="<%= query.query_detail %>" readonly>
           </div>
-          <div class="col-md-6">
-            <label class="form-label">Query Raised Date</label>
-            <input type="text" class="form-control" value="<%= query.query_raised_date %>" readonly>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Query Replied Date</label>
-            <input type="date" class="form-control view_replied_date"
-              value="<%= query.query_replied_date ? query.query_replied_date.toISOString().split('T')[0] : '' %>"
-              <%= query.query_replied_date ? 'readonly' : '' %> >
-          </div>
+
+
+           <%
+              let date = '';
+              if (query.query_replied_date) {
+                const d = new Date(query.query_replied_date);
+                const [day, month, year] = d.toLocaleDateString('en-GB', { timeZone: 'Asia/Kolkata' }).split('/');
+                date = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+              }
+            %>
+
+            <div class="col-md-6">
+              <label class="form-label">Query Replied Date</label>
+              <input type="date" class="form-control view_replied_date"
+                value="<%= date %>" <%= query.query_replied_date ? 'readonly' : '' %> >
+            </div>
+
+
           <div class="col-md-6 mt-4">
             <% if (!query.query_replied_date) { %>
               <button type="button" class="btn btn-success dateUpdate">Update Replied Date</button>
@@ -113,32 +131,33 @@
     </div>
 
     <h4>License Received Details</h4>
+
     <div class="card-section">
       <div class="row">
         <div class="col-md-6 mb-3">
           <label class="form-label">License received from Govt Dept</label>
-          <input type="date" class="form-control" name="received_from_govt_date">
+          <input type="date" class="form-control" name="received_from_govt_date" value="<%= result2.license_rec_date ? new Date(result2.license_rec_date).toISOString().slice(0,10) : '' %>" <%= result2.license_rec_date ? 'readonly' : '' %> >
         </div>
         <div class="col-md-6">
           <label class="form-label">License/Certificate No</label>
-          <input type="text" name="license_no" class="form-control">
+          <input type="text" name="license_no" class="form-control" value="<%= result2.license_no %>"<%= result2.license_no?'readonly':'' %>>
         </div>
       </div>
       <div class="row">
         <div class="col-md-6">
           <label class="form-label">License Detail (If any)</label>
-          <input type="text" name="license_note" class="form-control">
+          <input type="text" name="license_note" class="form-control" value="<%= result2.license_details %>" <%=result2.license_details?'readonly':'' %>>
         </div>
         <div class="col-md-6">
           <label class="form-label">License Expiry Date (If any)</label>
-          <input type="date" name="expiry_date" class="form-control">
+          <input type="date" name="expiry_date" class="form-control" value="<%= result2.license_expiry? new Date(result2.license_expiry).toISOString().slice(0,10):'' %>"<%= result2.license_expiry?'readonly':''  %>>
         </div>
       </div>
       <hr>
       <div class="row justify-content-center">
         <div class="col-md-6 mb-3 text-center">
           <label class="form-label">License Sent to Customer</label>
-          <input type="date" class="form-control" name="sent_to_customer" style="width: 50vw;">
+          <input type="date" class="form-control" name="sent_to_customer" style="width: 50vw;" value="<%= result2.sent_to_customer?new Date(result2.sent_to_customer).toISOString().slice(0,10):'' %>"<%=result2.sent_to_customer?'readonly':''%>>
         </div>
       </div>
       <hr>
@@ -190,8 +209,12 @@
     if (element) element.remove();
   }
 
-  document.querySelectorAll(".dateUpdate").forEach(button => {
-    button.addEventListener("click",async function () {
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+  document.querySelector(".container").addEventListener("click", async (event) => {
+    if (event.target.classList.contains("dateUpdate")) {
+      const button = event.target;
       const row = button.closest(".row");
       const queryId = row.dataset.queryId;
       const replied_date = row.querySelector(".view_replied_date").value;
@@ -199,16 +222,29 @@
       console.log("queryId:", queryId);
       console.log("replied_date:", replied_date);
 
-        const response=await fetch(`/replied_date/${queryId}`,{
-          method:"POST",
-          headers:{
-            'content-type':'application/json'
-          },
-          body:JSON.stringify({replied_date})
-        })
+      const response = await fetch(`/replied_date/${queryId}`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json"
+        },
+        body: JSON.stringify({ replied_date })
+      });
+      const result = await response.json();
+      console.log(result);
 
-    });
+      if (result.status === "success") {
+        Swal.fire({
+          title: "Date Updated Successfully",
+          icon: "success"
+        }).then(() => {
+          window.location.href = "/govt_process_dashboard";
+        });
+      }
+    }
   });
+});
+
+
 </script>
 </body>
 </html>

@@ -103,7 +103,7 @@
                     <td><%= lic_detail.submitted_to_gov?new Date(lic_detail.submitted_to_gov).toLocaleDateString('en-GB'):"" %></td>
                     <td><%= lic_detail.submitted_by %></td>
                     <td><%= lic_detail.license_no %></td>
-                    <td><%=lic_detail.license_expiry %></td>
+                    <td><%=lic_detail.license_expiry?new Date(lic_detail.license_expiry).toLocaleDateString('en-GB'):'' %></td>
                     <td><%= lic_detail.sent_to_customer ? new Date(lic_detail.sent_to_customer).toLocaleDateString('en-GB'):"" %></td>
                     <% if(lic_detail.sent_to_customer){ %>
                         <td><span class="badge bg-success text-dark">Completed</span></td>

@@ -1027,6 +1027,8 @@ app.get("/govt-process",(req,res)=>{
         res.render("govt_process_dashboard",{result})
       })
     })
+
+
     app.get("/govt-process-edit/:id",(req,res)=>{
       const {id}=req.params;
       const {ref}=req.query;
@@ -1036,10 +1038,10 @@ app.get("/govt-process",(req,res)=>{
         db.query(query,[id],(err,result)=>{
           if(err){console.log(err);return res.json(err)}
           const result2=result[0]
-         // console.log(result2)
+        // console.log("govtprocess",result2)
           db.query(query2,[ref],(err,govt_query)=>{
             if(err){console.log(err);return res.send("error")}
-            console.log(govt_query)
+          //  console.log("govt-query",govt_query)
             res.render("edit_govt_process",{result2,govt_query})
           })
         })
@@ -1050,8 +1052,11 @@ app.get("/govt-process",(req,res)=>{
 app.post("/edit_govt_process/:refno", (req, res) => {
   const { refno } = req.params;
   const queries = req.body.queries;
-
-  
+  const{license_no,license_note,expiry_date}=req.body
+  const received_from_govt_date2=req.body.received_from_govt_date||null
+  const expiry_date2=req.body.expiry_date||null
+  const sent_to_customer2=req.body.sent_to_customer||null
+ 
     // Step 2: Insert new queries from the form
     if (queries && Array.isArray(queries)) {
       const insertQuery = `
@@ -1078,9 +1083,15 @@ app.post("/edit_govt_process/:refno", (req, res) => {
         );
       });
     }
+    const query2="Update govt_process set license_rec_date=?,license_no=?,license_details=?,license_expiry=?,sent_to_customer=? where ref_no=?"
+      db.query(query2,[received_from_govt_date2,license_no,license_note,expiry_date2,sent_to_customer2,refno],(err,isnert)=>{
+          if(err){console.log(err);return res.send("error")}
+          res.redirect("/govt_process_dashboard");
 
-    res.redirect("/govt_process_dashboard");
+        })
   });
+
+
 
 app.post("/replied_date/:id",(req,res)=>{
   const {id}=req.params;
@@ -1088,9 +1099,10 @@ app.post("/replied_date/:id",(req,res)=>{
   const query="Update govt_process_queries set query_replied_date=? where id=?"
   db.query(query,[replied_date,id],(err,result)=>{
     if(err){console.log(err);return res.send("error")}
-   res.redirect("/govt_process_dashboard")
+          res.json({status:"success"})
   })
 })
+
 
 app.listen(4444,(err)=>{
 if(err){console.log(err.message,"Unable to start server")}
