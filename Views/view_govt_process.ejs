@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Customer-Government Interaction Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+      <!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .border {
+      box-shadow: 0px 1px 3px 1px rgb(0, 0, 0);
+    }
+    .card-section {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      border-radius: 0 0 5px 5px;
+      padding: 20px;
+      background-color: #fff;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<a href="/govt_process_dashboard" class="btn btn-primary">Back To Dashboard</a>
+
+<div class="container mt-5 border border-2">
+  <h2 class="mb-4 text-center">Government Process</h2>
+    <hr>
+    <h4>License & Customer Details</h4>
+    <div class="card-section">
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <label class="form-label"> Reference No</label>
+          <input type="text" name="refno" class="form-control" value="<%=result1.ref_no%>" disabled>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Customer Name</label>
+          <input type="text" class="form-control" name="cust_name" value="<%= result1.cust_name %>" disabled >
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">License Name</label>
+          <input type="text" class="form-control" name="licence" value="<%=result1.license_name%>" disabled >
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Concerned Govt Dept.</label>
+          <input type="text" class="form-control" name="govt_branch" value="<%= result1.concerned_dept %>" disabled >
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <h4>Initial Submission</h4>
+    <div class="card-section">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Documents sent by customer</label>
+          <input type="text" class="form-control" name="customer_documents" value="<%=(result1.customer_doc_sent).toLocaleDateString('en-GB')%>" disabled >
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Document Details(Name)</label>
+          <input type="text" class="form-control" name="documentdetails" value="<%= result1.doc_details %>" disabled>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Application submitted to Government portal</label>
+          <input type="text" class="form-control" name="application_submission_date" value="<%=new Date(result1.submitted_to_gov).toLocaleDateString('en-GB')%>" disabled >
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Submitted By Employee</label>
+          <input type="text" class="form-control" name="submitted_by_employee" value="<%= result1.submitted_by %>" disabled>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <h4>Previous Query Details</h4>
+    <div class="container">
+      <%  %>
+        <div class="row mb-3 border border-1 p-2" >
+          <div class="col-md-6">
+            <label class="form-label">Query Raised Date</label>
+            <input type="text" class="form-control" disabled>
+          </div>
+
+
+             <div class="col-md-6">
+            <label class="form-label">Query Details</label>
+            <input type="text" class="form-control"  disabled>
+          </div>
+
+
+            <div class="col-md-6">
+              <label class="form-label">Query Replied Date</label>
+              <input type="date" class="form-control view_replied_date" disabled>
+            </div>
+      <%  %>
+
+   
+
+    <h4>License Received Details</h4>
+
+    <div class="card-section">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">License received from Govt Dept</label>
+          <input type="text" class="form-control" name="received_from_govt_date" value="<%=new Date(result1.license_rec_date).toLocaleDateString('en-GB') %>"  disabled>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">License/Certificate No</label>
+          <input type="text" name="license_no" class="form-control" value="<%= result1.license_no %>" disabled>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label">License Detail (If any)</label>
+          <input type="text" name="license_note" class="form-control" value="<%= result1.license_details %>" disabled>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">License Expiry Date (If any)</label>
+          <input type="text" name="expiry_date" class="form-control" value="<%=new Date(result1.license_expiry).toLocaleDateString('en-GB')%>" disabled>
+        </div>
+      </div>
+      <hr>
+      <div class="row justify-content-center">
+        <div class="col-md-6 mb-3 text-center">
+          <label class="form-label">License Sent to Customer</label>
+          <input type="text" class="form-control" name="sent_to_customer" style="width: 50vw;"disabled value="<%=result1.sent_to_customer%> " >
+        </div>
+      </div>
+      <hr>
+    
+    </div>
+
+  </form>
+</div>
+</body>
+</html>

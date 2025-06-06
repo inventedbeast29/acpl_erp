@@ -25,7 +25,14 @@
   </style>
 </head>
 <body>
-
+<%
+  function formatDate(dateString) {
+    if (!dateString) return '';
+    const d = new Date(dateString);
+    const [day, month, year] = d.toLocaleDateString('en-GB', { timeZone: 'Asia/Kolkata' }).split('/');
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  }
+%>
 <a href="/govt_process_dashboard" class="btn btn-primary">Back To Dashboard</a>
 
 <div class="container mt-5 border border-2">
@@ -61,7 +68,7 @@
       <div class="row">
         <div class="col-md-6 mb-3">
           <label class="form-label">Documents sent by customer</label>
-          <input type="text" class="form-control" name="customer_documents" value="<%=new Date(result2.customer_doc_sent).toLocaleDateString('en') %>" <%= result2.customer_doc_sent ? 'readonly' : '' %>>
+          <input type="date" class="form-control" name="customer_documents" value="<%=formatDate(result2.customer_doc_sent) %>" <%= result2.customer_doc_sent ? 'readonly' : '' %>>
         </div>
         <div class="col-md-6">
           <label class="form-label">Document Details(Name)</label>
@@ -71,7 +78,7 @@
       <div class="row">
         <div class="col-md-6 mb-3">
           <label class="form-label">Application submitted to Government portal</label>
-          <input type="text" class="form-control" name="application_submission_date" value="<%=new Date(result2.submitted_to_gov).toLocaleDateString('en-GB') %>" <%= result2.submitted_to_gov ? 'readonly' : '' %>>
+          <input type="date" class="form-control" name="application_submission_date" value="<%=formatDate(result2.submitted_to_gov) %>" <%= result2.submitted_to_gov ? 'readonly' : '' %>>
         </div>
         <div class="col-md-6">
           <label class="form-label">Submitted By Employee</label>
@@ -87,7 +94,7 @@
         <div class="row mb-3 border border-1 p-2" data-query-id="<%= query.id %>">
           <div class="col-md-6">
             <label class="form-label">Query Raised Date</label>
-            <input type="text" class="form-control" value="<%= query.query_raised_date.toLocaleDateString('en-GB').split(",") %>" readonly>
+            <input type="date" class="form-control" value="<%= formatDate(query.query_raised_date)%>" readonly>
           </div>
 
 
@@ -136,7 +143,7 @@
       <div class="row">
         <div class="col-md-6 mb-3">
           <label class="form-label">License received from Govt Dept</label>
-          <input type="date" class="form-control" name="received_from_govt_date" value="<%= result2.license_rec_date ? new Date(result2.license_rec_date).toISOString().slice(0,10) : '' %>" <%= result2.license_rec_date ? 'readonly' : '' %> >
+          <input type="date" class="form-control" name="received_from_govt_date" value="<%=result2.license_rec_date?formatDate( result2.license_rec_date) : '' %>" <%= result2.license_rec_date ? 'readonly' : '' %> >
         </div>
         <div class="col-md-6">
           <label class="form-label">License/Certificate No</label>
@@ -150,14 +157,14 @@
         </div>
         <div class="col-md-6">
           <label class="form-label">License Expiry Date (If any)</label>
-          <input type="date" name="expiry_date" class="form-control" value="<%= result2.license_expiry? new Date(result2.license_expiry).toISOString().slice(0,10):'' %>"<%= result2.license_expiry?'readonly':''  %>>
+          <input type="date" name="expiry_date" class="form-control" value="<%=result2.license_expiry?formatDate (result2.license_expiry):'' %>"<%= result2.license_expiry?'readonly':''  %>>
         </div>
       </div>
       <hr>
       <div class="row justify-content-center">
         <div class="col-md-6 mb-3 text-center">
           <label class="form-label">License Sent to Customer</label>
-          <input type="date" class="form-control" name="sent_to_customer" style="width: 50vw;" value="<%= result2.sent_to_customer?new Date(result2.sent_to_customer).toISOString().slice(0,10):'' %>"<%=result2.sent_to_customer?'readonly':''%>>
+          <input type="date" class="form-control" name="sent_to_customer" style="width: 50vw;" value="<%= result2.sent_to_customer?formatDate(result2.sent_to_customer):'' %>"<%=result2.sent_to_customer?'readonly':''%>>
         </div>
       </div>
       <hr>

@@ -1106,6 +1106,19 @@ app.post("/replied_date/:id",(req,res)=>{
 })
 
 
+app.get("/govt-process-view/:id",(req,res)=>{
+  const {id}=req.params;
+  const refno=req.query;
+  const query="Select * from govt_process where id=?" 
+  db.query(query,[id],(err,response)=>{
+    if(err){console.log(err);return res.send("Cannot get govt_process")};
+    console.log(response[0])
+    const result1=response[0];
+      res.render("view_govt_process",{result1})
+  })
+  
+})
+
 app.listen(4444,(err)=>{
 if(err){console.log(err.message,"Unable to start server")}
 else{
