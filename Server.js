@@ -175,7 +175,19 @@ app.post("/login",(req, res) => {
     app.use(authenticateRoutes) //Authentication of users to access the routes
 
 app.get("/main",(req,res)=>{
-  res.render("main");
+const query="Select COUNT(*) As total_user from users";
+const query2="select Count(*) AS total_customer from customers"
+db.query(query,(err,result)=>{
+  if(err){console.log(err)}
+  //console.log(result[0].total_user);
+  const users=result[0]
+  db.query(query2,(err,result2)=>{
+    if(err){console.log(err)}
+    console.log(result2);
+    const customers=result2[0];
+   res.render("main",{users,customers});
+  })
+})
 })
 
 
@@ -1108,15 +1120,50 @@ app.post("/replied_date/:id",(req,res)=>{
 
 app.get("/govt-process-view/:id",(req,res)=>{
   const {id}=req.params;
-  const refno=req.query;
+  const refno=req.query.ref;
   const query="Select * from govt_process where id=?" 
+  const query2="Select * from govt_process_queries where ref_no=?"
   db.query(query,[id],(err,response)=>{
     if(err){console.log(err);return res.send("Cannot get govt_process")};
-    console.log(response[0])
+    //console.log(response[0])
     const result1=response[0];
-      res.render("view_govt_process",{result1})
+   db.query(query2,[refno],(err,result2)=>{
+    if(err){console.log(err); return res.send("cannot get govtqueries")}
+         // console.log(result2)
+       res.render("view_govt_process",{result1,result2})
+   })
   })
-  
+})
+
+app.get("/reports",(req,res)=>{
+  const query=`Select distinct submitted_by from govt_process `;
+  db.query(query,(err,employees)=>{
+    if(err){console.log(err)}
+  // console.log(employees)
+    res.render("employee_report",{employees})
+  })
+})
+
+
+app.post("/getPending",(req,res)=>{
+  const {name}=req.body;
+  const status="Pending"|| null;
+  const query="Select count(*) as pending from govt_process where submitted_by=? and sts=?"
+  const query2="Select count(*) as completed from govt_process where submitted_by=? and sts='Completed'"
+  const query3="Select Count(*) as total from govt_process where submitted_by=?"
+  db.query(query,[name,status],(err,pendingcount)=>{
+    if(err){console.log(err)};
+    //console.log(pendingcount[0]);
+    db.query(query2,[name],(err,completedcount)=>{
+      if(err){console.log(err)}
+     //   console.log(completedcount[0])
+        db.query(query3,[name],(err,total)=>{
+          if(err){console.log(err)}
+      //    console.log(total[0])
+           res.json({'pendingcount':pendingcount[0].pending,'completedcount':completedcount[0],'totalcount':total[0]})
+        })
+  })
+})
 })
 
 app.listen(4444,(err)=>{

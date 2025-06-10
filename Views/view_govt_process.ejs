@@ -81,27 +81,29 @@
     <hr>
     <h4>Previous Query Details</h4>
     <div class="container">
-      <%  %>
+      <% result2.forEach(function(query){ %>
+
         <div class="row mb-3 border border-1 p-2" >
           <div class="col-md-6">
             <label class="form-label">Query Raised Date</label>
-            <input type="text" class="form-control" disabled>
+            <input type="text" class="form-control" disabled value="<%=query.query_raised_date?new Date(query.query_raised_date).toLocaleDateString('en-GB').split(","):"" %>">
           </div>
 
-
+           
              <div class="col-md-6">
             <label class="form-label">Query Details</label>
-            <input type="text" class="form-control"  disabled>
+            <input type="text" class="form-control"  disabled value="<%= query.query_detail %>">
           </div>
 
 
             <div class="col-md-6">
               <label class="form-label">Query Replied Date</label>
-              <input type="date" class="form-control view_replied_date" disabled>
+              <input type="text" class="form-control view_replied_date" disabled value="<%=query.query_replied_date?new Date(query.query_replied_date).toLocaleDateString('en-GB').split(","):"" %>">
             </div>
-      <%  %>
+             </div>
+      <%  }) %>
 
-   
+  
 
     <h4>License Received Details</h4>
 
@@ -130,7 +132,7 @@
       <div class="row justify-content-center">
         <div class="col-md-6 mb-3 text-center">
           <label class="form-label">License Sent to Customer</label>
-          <input type="text" class="form-control" name="sent_to_customer" style="width: 50vw;"disabled value="<%=result1.sent_to_customer%> " >
+          <input type="text" class="form-control" name="sent_to_customer" style="width: 50vw;"disabled value="<%=result1.sent_to_customer?new Date(result1.sent_to_customer).toLocaleDateString('en-GB').split(","):""%> " >
         </div>
       </div>
       <hr>
