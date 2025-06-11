@@ -177,15 +177,22 @@ app.post("/login",(req, res) => {
 app.get("/main",(req,res)=>{
 const query="Select COUNT(*) As total_user from users";
 const query2="select Count(*) AS total_customer from customers"
+const query3="Select Count(*) as total_purchase_req from purchase_query" 
 db.query(query,(err,result)=>{
   if(err){console.log(err)}
   //console.log(result[0].total_user);
   const users=result[0]
   db.query(query2,(err,result2)=>{
     if(err){console.log(err)}
-    console.log(result2);
+    //console.log(result2);
     const customers=result2[0];
-   res.render("main",{users,customers});
+    db.query(query3,(err,result3)=>{
+      if(err){console.log(err)};
+    //  console.log(result3[0].total_purchase_req)
+      const total_purchase=result3[0].total_purchase_req;
+   res.render("main",{users,customers,total_purchase});
+
+    })
   })
 })
 })
@@ -1165,6 +1172,54 @@ app.post("/getPending",(req,res)=>{
   })
 })
 })
+app.get("/employee/applications/:name", (req, res) => {
+  const { name } = req.params;
+  const query = "SELECT * FROM govt_process WHERE submitted_by=?";
+
+  db.query(query, [name], (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send("DB Error");
+    }
+
+    const today = new Date();
+
+    // Generate age buckets
+    const processedResults = result.map(row => {
+      let ageBuckets = {
+        moreThan15: '',
+        day15to30: '',
+        day31to45: '',
+        day46to60: '',
+        moreThan60: ''
+      };
+
+      if (row.sts !== "Completed" && row.submitted_to_gov) {
+        const submittedDate = new Date(row.submitted_to_gov);
+        const days = Math.floor((today - submittedDate) / (1000 * 60 * 60 * 24));
+
+        if (days <= 15) ageBuckets.moreThan15 = 1;
+        else if (days <= 30) ageBuckets.day15to30 = 1;
+        else if (days <= 45) ageBuckets.day31to45 = 1;
+        else if (days <= 60) ageBuckets.day46to60 = 1;
+        else ageBuckets.moreThan60 = 1;
+      }
+
+      return { ref_no: row.ref_no, ...ageBuckets };
+    });
+
+    // Merge age buckets back into result
+    const mergedResult = result.map(row => {
+      const bucketData = processedResults.find(p => p.ref_no === row.ref_no);
+      return { ...row, ...bucketData };
+    });
+
+    res.render("age_wise_report", { result: mergedResult, name });
+  });
+});
+
+
+
 
 app.listen(4444,(err)=>{
 if(err){console.log(err.message,"Unable to start server")}
