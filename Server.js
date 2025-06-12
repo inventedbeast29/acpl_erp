@@ -178,6 +178,8 @@ app.get("/main",(req,res)=>{
 const query="Select COUNT(*) As total_user from users";
 const query2="select Count(*) AS total_customer from customers"
 const query3="Select Count(*) as total_purchase_req from purchase_query" 
+const query4="Select count(*) as total_submitted from govt_process";
+const query5="Select count(*) as total_qtn_no from quotation";
 db.query(query,(err,result)=>{
   if(err){console.log(err)}
   //console.log(result[0].total_user);
@@ -190,12 +192,20 @@ db.query(query,(err,result)=>{
       if(err){console.log(err)};
     //  console.log(result3[0].total_purchase_req)
       const total_purchase=result3[0].total_purchase_req;
-   res.render("main",{users,customers,total_purchase});
-
+      db.query(query4,(err,submitted)=>{
+        if(err){console.log(err);}
+        const total_submitted_to_gov=submitted[0];
+        db.query(query5,(err,qtn)=>{
+          if(err){console.log(err);}
+          const total_qtn=qtn[0]
+          res.render("main",{users,customers,total_purchase,total_submitted_to_gov,total_qtn});
+        })
+      })
+        })
+      })
     })
   })
-})
-})
+
 
 
     

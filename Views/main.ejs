@@ -19,6 +19,9 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f4f6f8;
     }
+     .dropdown-menu {
+  z-index: 1050; /* ensure it's above sidebar */
+}
 
     .sidebar {
       height: 100vh;
@@ -27,7 +30,7 @@
       position: fixed;
       width: 220px;
       padding-top: 20px;
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
 
     }
 
@@ -74,7 +77,10 @@
     .card-box:hover {
       transform: translateY(-5px);
     }
-
+    #report:hover{
+      cursor: pointer;
+    }
+ 
     .logout-btn {
       bottom: 20px;
       width: 90%;
@@ -129,12 +135,21 @@
     <a href="/applicationtype_dashboard">
       <i class="fa-solid fa-scale-balanced me-2"></i>License Details
     </a>
-
     
-<a href="/reports">
-  <i class="bi bi-file-earmark-text"></i> Reports
+
+<a class=" dropdown-toggle w-100 text-start" id="report"  data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="bi bi-file-earmark-text me-2"></i> Reports
 </a>
-  
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" id="govt-process-report" href="/reports">Govt process & handover Report</a></li>
+    <li><a class="dropdown-item" href="#">Agewise client Request report</a></li>
+    <li><a class="dropdown-item" href="#">Payment Report</a></li>
+  </ul>
+
+
+
+
+
     <form action="/logout" method="POST" class="logout-btn">
       <button class="btn btn-danger w-100"><i class="fa-solid fa-sign-out-alt me-2"></i>Logout</button>
     </form>
@@ -167,11 +182,27 @@
           <p class="display-6 text-success fw-bold"><%=total_purchase%></p>
         </div>
       </div>
+
+      <div class="col-md-4">
+        <div class="card-box text-center">
+          <h5>Total Applications Submitted to Government</h5>
+          <p class="display-6 text-warning fw-bold"><%=total_submitted_to_gov.total_submitted %></p>
+        </div>
+      </div>
       
+
+      
+      <div class="col-md-4">
+        <div class="card-box text-center">
+          <h5>Total Created Quotation</h5>
+          <p class="display-6 text-danger fw-bold"><%=total_qtn.total_qtn_no %></p>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Bootstrap & FontAwesome -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
 </body>
 </html>
