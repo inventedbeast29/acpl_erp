@@ -74,16 +74,11 @@
       <div class="row">
         <div class="col-md-6 mb-3">
           <label for="application_submission_date" class="form-label">Application submitted to Government portal</label>
-          <input type="date" class="form-control" id="application_submission" name="application_submission_date" required/>
+          <input type="date" class="form-control" id="application_submission" name="application_submission_date"  required/>
         </div>
         <div class="col-md-6">
           <label for="submitted_by_employee" class="form-label" >Submitted By Employee</label>
-          <select class="form-control"  name="submitted_by_employee" required>
-            <option value="">Select Employee</option>
-            <% emp.forEach(function(employee){ %>
-                <option value="<%= employee.name %>"><%=employee.name%></option>
-            <%}) %>
-          </select>
+          <input type="text" class="form-control" id="submitted_by_employee" name="submitted_by_employee" style="background-color: rgb(163, 163, 163);" required>
         </div>
       </div>
     </div>
@@ -159,6 +154,7 @@
         document.getElementById("cust_name").value = result.result2.customer_name || "";
         document.getElementById("licence").value = result.result2.sub_work || "";
         document.getElementById("govt_branch").value = result.result2.govt_branch || "";
+        document.getElementById("submitted_by_employee").value=result.result2.assigned_to || "";
       } else {
         document.getElementById("cust_name").value = "";
         document.getElementById("licence").value = "";

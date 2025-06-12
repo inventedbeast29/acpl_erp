@@ -1003,15 +1003,12 @@ app.get("/reminders",(req,res)=>{
 
 app.get("/govt-process",(req,res)=>{
    const query="select serial_no from purchase_query";
-    const query2="Select name from users"
     db.query(query,(err,result)=>{
       if(err){console.log(err)}
-      db.query(query2,(err,emp)=>{
-        if(err){console.log(err)}
-        res.render("add_govt_process",{result,emp})
+        res.render("add_govt_process",{result})
 })
     })
-  })
+
 
   app.post("/details",(req,res)=>{
     const {refnovalue}=req.body;
@@ -1019,6 +1016,7 @@ app.get("/govt-process",(req,res)=>{
     db.query(query,[refnovalue],(err,result)=>{
       if(err){console.log(err)}
       const result2=result[0]
+      //console.log(result2)
       res.json({result2})
     })
   })
